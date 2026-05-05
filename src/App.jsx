@@ -852,8 +852,63 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
 .delta-negative { color: var(--red); }
 .delta-zero { color: var(--text-dim); }
 
-/* SCROLLBAR */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+/* API CARD SEARCH */
+.api-search-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.api-card-result {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.api-card-result:hover { border-color: rgba(240,192,64,0.5); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+.api-card-result.already-have { opacity: 0.4; pointer-events: none; }
+
+.api-card-img { width: 100%; display: block; aspect-ratio: 3/4; object-fit: cover; background: var(--surface); }
+.api-card-img-placeholder { width: 100%; aspect-ratio: 3/4; background: var(--surface); display: flex; align-items: center; justify-content: center; color: var(--text-faint); font-size: 28px; }
+
+.api-card-info { padding: 8px; }
+.api-card-name { font-size: 11px; font-weight: 500; color: var(--text); line-height: 1.3; margin-bottom: 2px; }
+.api-card-set { font-family: var(--font-mono); font-size: 9px; color: var(--text-faint); }
+.api-card-price { font-family: var(--font-mono); font-size: 11px; color: var(--gold); margin-top: 3px; }
+
+.api-card-badge {
+  position: absolute;
+  top: 5px; right: 5px;
+  background: rgba(64,200,120,0.9);
+  color: #080c10;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+}
+
+.api-card-add-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(240,192,64,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s;
+  font-size: 28px;
+}
+
+.api-card-result:hover .api-card-add-overlay { opacity: 1; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
 `;
@@ -913,14 +968,58 @@ function CollectionTracker({ onSendToTrade }) {
   const [showMode, setShowMode] = useState(false);
   const [showQuery, setShowQuery] = useState("");
   const [showResult, setShowResult] = useState(null);
-  const [addName, setAddName] = useState("");
-  const [addSet, setAddSet] = useState("");
-  const [addValue, setAddValue] = useState("");
-  const [addFocus, setAddFocus] = useState("Charizard");
-  const [addStatus, setAddStatus] = useState("have");
   const showInputRef = useRef(null);
 
-  const focuses = ["All", "Charizard", "Pikachu", "Mimikyu"];
+  // API card search
+  const [apiSearch, setApiSearch] = useState("");
+  const [apiResults, setApiResults] = useState([]);
+  const [apiLoading, setApiLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
+  const [addStatus, setAddStatus] = useState("have");
+  const [addFocus, setAddFocus] = useState("Other");
+  const searchTimeout = useRef(null);
+
+  async function searchCards(q) {
+    if (!q.trim()) { setApiResults([]); return; }
+    setApiLoading(true);
+    setApiError("");
+    try {
+      const res = await fetch(`https://api.pokemontcg.io/v2/cards?q=name:"${encodeURIComponent(q)}"&pageSize=20&orderBy=-set.releaseDate`);
+      const data = await res.json();
+      setApiResults(data.data || []);
+    } catch (e) {
+      setApiError("Search failed — check your connection");
+    }
+    setApiLoading(false);
+  }
+
+  function handleApiSearchChange(e) {
+    const q = e.target.value;
+    setApiSearch(q);
+    clearTimeout(searchTimeout.current);
+    searchTimeout.current = setTimeout(() => searchCards(q), 500);
+  }
+
+  function addFromApi(card) {
+    const tcgPrice = card.tcgplayer?.prices;
+    const priceVal = tcgPrice
+      ? (tcgPrice.holofoil?.market || tcgPrice.normal?.market || tcgPrice.reverseHolofoil?.market || tcgPrice["1stEditionHolofoil"]?.market || 0)
+      : 0;
+    const newCard = {
+      id: `api-${card.id}`,
+      name: `${card.name} ${card.number}/${card.set?.printedTotal || card.set?.total || "?"}`,
+      set: card.set?.name || "Unknown Set",
+      type: card.rarity || "—",
+      value: priceVal,
+      status: addStatus,
+      focus: addFocus || card.name,
+      image: card.images?.small,
+    };
+    setAllCards(prev => {
+      if (prev.find(c => c.id === newCard.id)) return prev;
+      return [...prev, newCard];
+    });
+  }
 
   const filtered = allCards.filter(c => {
     const focusMatch = activeFocus === "All" || c.focus === activeFocus;
@@ -939,21 +1038,6 @@ function CollectionTracker({ onSendToTrade }) {
 
   function removeCard(id) {
     setAllCards(prev => prev.filter(c => c.id !== id));
-  }
-
-  function addCard() {
-    if (!addName.trim()) return;
-    const newCard = {
-      id: `card-${Date.now()}`,
-      name: addName.trim(),
-      set: addSet.trim() || "Unknown Set",
-      type: "—",
-      value: parseFloat(addValue) || 0,
-      status: addStatus,
-      focus: addFocus,
-    };
-    setAllCards(prev => [...prev, newCard]);
-    setAddName(""); setAddSet(""); setAddValue("");
   }
 
   function doShowSearch() {
@@ -1122,27 +1206,81 @@ function CollectionTracker({ onSendToTrade }) {
         </div>
       )}
 
-      {/* ADD CARD */}
+      {/* ADD CARD — API SEARCH */}
       <div className="divider" />
-      <div className="label">Add Card</div>
+      <div className="label">Search & Add Cards</div>
       <div className="card">
-        <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:10}}>
-          <input className="input" placeholder="Card name (e.g. Charizard 4/102)" value={addName} onChange={e => setAddName(e.target.value)} />
-          <input className="input" placeholder="Set name" value={addSet} onChange={e => setAddSet(e.target.value)} />
-          <input className="input" placeholder="Market value ($)" value={addValue} onChange={e => setAddValue(e.target.value)} type="number" />
-          <div className="row">
-            <select className="input" value={addFocus} onChange={e => setAddFocus(e.target.value)} style={{flex:1}}>
-              {["Charizard","Pikachu","Mimikyu","Other"].map(f => <option key={f}>{f}</option>)}
-            </select>
-            <select className="input" value={addStatus} onChange={e => setAddStatus(e.target.value)} style={{flex:1}}>
-              <option value="have">Have</option>
-              <option value="want">Want</option>
-            </select>
+        {/* search controls row */}
+        <div style={{display:"grid", gridTemplateColumns:"1fr auto auto", gap:8, alignItems:"center"}}>
+          <div style={{position:"relative"}}>
+            <span style={{position:"absolute", left:12, top:"50%", transform:"translateY(-50%)", color:"var(--text-faint)", fontSize:13, pointerEvents:"none"}}>🔍</span>
+            <input
+              className="input"
+              style={{paddingLeft:34}}
+              placeholder="Search any Pokémon card… (e.g. Charizard, Mimikyu)"
+              value={apiSearch}
+              onChange={handleApiSearchChange}
+            />
           </div>
+          <select className="input" value={addFocus} onChange={e => setAddFocus(e.target.value)} style={{width:"auto"}}>
+            {["Charizard","Pikachu","Mimikyu","Other"].map(f => <option key={f}>{f}</option>)}
+          </select>
+          <select className="input" value={addStatus} onChange={e => setAddStatus(e.target.value)} style={{width:"auto"}}>
+            <option value="have">Have</option>
+            <option value="want">Want</option>
+          </select>
         </div>
-        <div className="row mt-8" style={{justifyContent:"flex-end"}}>
-          <button className="btn btn-gold" onClick={addCard} disabled={!addName.trim()}>+ Add Card</button>
-        </div>
+
+        {apiLoading && (
+          <div style={{textAlign:"center", padding:"20px 0", color:"var(--text-dim)", fontFamily:"var(--font-mono)", fontSize:12}}>
+            Searching <LoadingDots />
+          </div>
+        )}
+
+        {apiError && (
+          <div style={{color:"var(--red)", fontSize:12, marginTop:10, fontFamily:"var(--font-mono)"}}>{apiError}</div>
+        )}
+
+        {apiResults.length > 0 && (
+          <>
+            <div className="label" style={{marginTop:14, marginBottom:0}}>
+              {apiResults.length} results — click a card to add as {addStatus === "have" ? "✅ Have" : "⭐ Want"}
+            </div>
+            <div className="api-search-results">
+              {apiResults.map(card => {
+                const alreadyHave = allCards.some(c => c.id === `api-${card.id}`);
+                const tcgPrice = card.tcgplayer?.prices;
+                const price = tcgPrice
+                  ? (tcgPrice.holofoil?.market || tcgPrice.normal?.market || tcgPrice.reverseHolofoil?.market || tcgPrice["1stEditionHolofoil"]?.market || null)
+                  : null;
+                return (
+                  <div
+                    key={card.id}
+                    className={`api-card-result ${alreadyHave ? "already-have" : ""}`}
+                    onClick={() => !alreadyHave && addFromApi(card)}
+                    title={`${card.name} · ${card.set?.name}`}
+                  >
+                    {card.images?.small
+                      ? <img src={card.images.small} alt={card.name} className="api-card-img" loading="lazy" />
+                      : <div className="api-card-img-placeholder">🃏</div>
+                    }
+                    <div className="api-card-add-overlay">{addStatus === "have" ? "✅" : "⭐"}</div>
+                    {alreadyHave && <div className="api-card-badge">ADDED</div>}
+                    <div className="api-card-info">
+                      <div className="api-card-name">{card.name} {card.number}/{card.set?.printedTotal || card.set?.total}</div>
+                      <div className="api-card-set">{card.set?.name}</div>
+                      {price ? <div className="api-card-price">${price.toFixed(2)}</div> : <div className="api-card-price" style={{color:"var(--text-faint)"}}>No price</div>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
+
+        {!apiLoading && apiSearch && apiResults.length === 0 && (
+          <div style={{textAlign:"center", padding:"20px 0", color:"var(--text-faint)", fontSize:13}}>No cards found for "{apiSearch}"</div>
+        )}
       </div>
     </div>
   );
@@ -1310,12 +1448,7 @@ Format your response as JSON:
     try {
       const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": import.meta.env.VITE_ANTHROPIC_API_KEY || "",
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
           max_tokens: 1000,
