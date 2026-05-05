@@ -1137,7 +1137,7 @@ function CollectionTracker({ onSendToTrade }) {
         </div>
 
         <div className="focus-chips">
-          {focuses.map(f => {
+          {["All", "Charizard", "Pikachu", "Mimikyu"].map(f => {
             const count = allCards.filter(c => (f === "All" || c.focus === f) && c.status === "want").length;
             return (
               <button key={f} className={`focus-chip ${activeFocus === f ? "active" : ""}`} onClick={() => setActiveFocus(f)}>
