@@ -119,6 +119,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
 }
 .input::placeholder { color: var(--text-faint); }
 .input:focus { border-color: rgba(240,192,64,0.4); }
+.input option { background: #141c24; color: #d8e0e8; }
 
 /* BUTTONS */
 .btn {
@@ -1446,7 +1447,7 @@ Format your response as JSON:
 }`;
 
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("https://empty-term-1f24pokeedge-proxy.dlmgallant.workers.dev", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
