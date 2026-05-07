@@ -1,7 +1,7 @@
 # PokeEdge — TCG Trade Advisor
 
 AI-powered Pokémon TCG trade advisor and collection tracker.
-
+ 
 **Features**
 - Collection tracker with Have/Want status, focus filters (Charizard, Pikachu, Mimikyu, etc.)
 - Show Mode — quick card lookup at card shows
