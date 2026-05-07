@@ -1064,6 +1064,111 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
 }
 .condition-pill:hover { background: rgba(192,132,252,0.25); border-color: var(--purple); }
 .condition-pill option { background: #1a2533; color: var(--text); }
+
+/* AI BREAKDOWN — STRUCTURED, NO WALL OF TEXT */
+.ai-breakdown {
+  margin-top: 12px;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ai-verdict-line {
+  background: linear-gradient(90deg, var(--gold-dim) 0%, transparent 100%);
+  padding: 10px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ai-verdict-icon { color: var(--gold); font-size: 14px; line-height: 1.4; }
+
+.ai-verdict-text {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.45;
+  flex: 1;
+}
+
+.ai-cats {
+  padding: 4px 0;
+}
+
+.ai-cat {
+  display: flex;
+  gap: 10px;
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  align-items: flex-start;
+}
+
+.ai-cat:last-child { border-bottom: none; }
+
+.ai-cat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  width: 110px;
+  padding-top: 1px;
+  font-weight: 500;
+}
+
+.ai-cat-text {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.ai-pros-cons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--border);
+}
+
+.ai-upside, .ai-risk {
+  padding: 10px 14px;
+}
+
+.ai-upside {
+  background: rgba(74,222,128,0.06);
+  border-right: 1px solid var(--border);
+}
+
+.ai-risk {
+  background: rgba(255,84,112,0.06);
+}
+
+.ai-pc-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.ai-upside .ai-pc-label { color: var(--green); }
+.ai-risk .ai-pc-label { color: var(--red); }
+
+.ai-pc-text {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+@media (max-width: 480px) {
+  .ai-cat-label { width: auto; }
+  .ai-cat { flex-direction: column; gap: 2px; }
+  .ai-pros-cons { grid-template-columns: 1fr; }
+  .ai-upside { border-right: none; border-bottom: 1px solid var(--border); }
+}
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
 `;
@@ -1623,24 +1728,30 @@ Analyze each offer across these dimensions:
 5. TOURNAMENT/META — Competitive relevance driving price spikes vs. pure collectible demand.
 6. TRADE RATE FAIRNESS — Factor in the ${myRate}% trade credit. Does the net gap make this offer better or worse than it appears at face value?
 
-For EACH offer, give a SPECULATION SCORE out of 100 and a paragraph of analysis. Then give an overall RECOMMENDATION ranked 1st, 2nd, 3rd.
+For EACH offer, give a SPECULATION SCORE out of 100 and BRIEF analysis broken into the categories. Keep each category to 1-2 short sentences max. Be concise and scannable. Then give an overall RECOMMENDATION ranked 1st, 2nd, 3rd.
 
-Format your response as JSON:
+CRITICAL: Return ONLY the JSON object below — no commentary before or after. Each text field must be 1-2 sentences MAX.
+
 {
   "offers": [
     {
       "id": "offer-1",
       "score": 82,
-      "analysis": "paragraph here",
-      "keyRisk": "short risk summary",
-      "keyUpside": "short upside summary"
+      "verdict": "1 sentence summary verdict",
+      "priceHistory": "1-2 sentences on lifetime price trends",
+      "reprintRisk": "1 sentence on reprint likelihood",
+      "gradingUpside": "1 sentence on PSA/grading potential",
+      "demand": "1 sentence on collector/meta demand",
+      "rateImpact": "1 sentence on net trade gap effect",
+      "keyUpside": "5-10 word upside",
+      "keyRisk": "5-10 word risk"
     }
   ],
   "recommendation": {
     "rank1": "offer-1",
     "rank2": "offer-2",
     "rank3": "offer-3",
-    "summary": "2-3 sentence overall verdict paragraph"
+    "summary": "2-3 sentence overall verdict"
   }
 }`;
 
@@ -1866,16 +1977,51 @@ Format your response as JSON:
                     </div>
                   ))}
                   {oa && (
-                    <div style={{marginTop:12, padding:"10px 12px", background:"var(--surface2)", borderRadius:6, border:"1px solid var(--border)"}}>
-                      <div style={{fontSize:13, lineHeight:1.65, color:"var(--text-dim)"}}>{oa.analysis}</div>
-                      <div className="row mt-8" style={{gap:8, flexWrap:"wrap"}}>
-                        <div style={{flex:1, minWidth:120}}>
-                          <div className="label" style={{marginBottom:3, fontSize:9}}>Key Upside</div>
-                          <div className="text-green text-xs">{oa.keyUpside}</div>
+                    <div className="ai-breakdown">
+                      <div className="ai-verdict-line">
+                        <span className="ai-verdict-icon">⚡</span>
+                        <span className="ai-verdict-text">{oa.verdict}</span>
+                      </div>
+                      <div className="ai-cats">
+                        {oa.priceHistory && (
+                          <div className="ai-cat">
+                            <span className="ai-cat-label">📊 Price History</span>
+                            <span className="ai-cat-text">{oa.priceHistory}</span>
+                          </div>
+                        )}
+                        {oa.reprintRisk && (
+                          <div className="ai-cat">
+                            <span className="ai-cat-label">🔁 Reprint Risk</span>
+                            <span className="ai-cat-text">{oa.reprintRisk}</span>
+                          </div>
+                        )}
+                        {oa.gradingUpside && (
+                          <div className="ai-cat">
+                            <span className="ai-cat-label">💎 Grading</span>
+                            <span className="ai-cat-text">{oa.gradingUpside}</span>
+                          </div>
+                        )}
+                        {oa.demand && (
+                          <div className="ai-cat">
+                            <span className="ai-cat-label">🔥 Demand</span>
+                            <span className="ai-cat-text">{oa.demand}</span>
+                          </div>
+                        )}
+                        {oa.rateImpact && (
+                          <div className="ai-cat">
+                            <span className="ai-cat-label">⚖️ Rate Impact</span>
+                            <span className="ai-cat-text">{oa.rateImpact}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="ai-pros-cons">
+                        <div className="ai-upside">
+                          <div className="ai-pc-label">↑ Upside</div>
+                          <div className="ai-pc-text">{oa.keyUpside}</div>
                         </div>
-                        <div style={{flex:1, minWidth:120}}>
-                          <div className="label" style={{marginBottom:3, fontSize:9}}>Key Risk</div>
-                          <div className="text-red text-xs">{oa.keyRisk}</div>
+                        <div className="ai-risk">
+                          <div className="ai-pc-label">↓ Risk</div>
+                          <div className="ai-pc-text">{oa.keyRisk}</div>
                         </div>
                       </div>
                     </div>
