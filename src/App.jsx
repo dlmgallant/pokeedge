@@ -6,22 +6,36 @@ const STYLES = `
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #080c10;
-  --surface: #0e1419;
-  --surface2: #141c24;
-  --border: rgba(255,255,255,0.07);
-  --border-bright: rgba(255,255,255,0.14);
-  --gold: #f0c040;
-  --gold-dim: rgba(240,192,64,0.15);
-  --red: #e84040;
-  --green: #40c878;
-  --blue: #4090f0;
-  --text: #d8e0e8;
-  --text-dim: rgba(216,224,232,0.45);
-  --text-faint: rgba(216,224,232,0.2);
+  --bg: #06090d;
+  --surface: #111922;
+  --surface2: #1a2533;
+  --surface3: #243245;
+  --border: rgba(255,255,255,0.1);
+  --border-bright: rgba(255,255,255,0.2);
+  --border-strong: rgba(255,255,255,0.32);
+  --gold: #ffc940;
+  --gold-bright: #ffd966;
+  --gold-dim: rgba(255,201,64,0.18);
+  --gold-glow: rgba(255,201,64,0.35);
+  --red: #ff5470;
+  --red-dim: rgba(255,84,112,0.15);
+  --green: #4ade80;
+  --green-dim: rgba(74,222,128,0.15);
+  --green-glow: rgba(74,222,128,0.3);
+  --blue: #60a5fa;
+  --blue-dim: rgba(96,165,250,0.15);
+  --blue-glow: rgba(96,165,250,0.3);
+  --purple: #c084fc;
+  --purple-dim: rgba(192,132,252,0.15);
+  --text: #f1f5f9;
+  --text-dim: rgba(241,245,249,0.65);
+  --text-faint: rgba(241,245,249,0.35);
   --font-display: 'Rajdhani', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
   --font-body: 'IBM Plex Sans', sans-serif;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
 }
 
 body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; }
@@ -30,8 +44,9 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
   min-height: 100vh;
   background: var(--bg);
   background-image:
-    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(240,192,64,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 40% at 90% 90%, rgba(64,144,240,0.04) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(255,201,64,0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 95% 90%, rgba(96,165,250,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 40% at 5% 60%, rgba(192,132,252,0.06) 0%, transparent 50%);
 }
 
 /* NAV */
@@ -106,42 +121,44 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
 
 /* INPUTS */
 .input {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid var(--border-bright);
+  border-radius: 6px;
   color: var(--text);
   font-family: var(--font-mono);
   font-size: 13px;
-  padding: 9px 14px;
+  padding: 10px 14px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
   width: 100%;
 }
 .input::placeholder { color: var(--text-faint); }
-.input:focus { border-color: rgba(240,192,64,0.4); }
-.input option { background: #141c24; color: #d8e0e8; }
+.input:hover { border-color: var(--border-strong); background: rgba(255,255,255,0.08); }
+.input:focus { border-color: var(--gold); background: rgba(255,255,255,0.08); box-shadow: 0 0 0 3px var(--gold-dim); }
+.input option { background: #1a2533; color: #f1f5f9; }
 
 /* BUTTONS */
 .btn {
-  padding: 9px 20px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   font-family: var(--font-display);
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
   white-space: nowrap;
   text-transform: uppercase;
 }
-.btn:disabled { opacity: 0.35; cursor: not-allowed; }
-.btn-gold { background: var(--gold); color: #080c10; }
-.btn-gold:hover:not(:disabled) { background: #f8d060; transform: translateY(-1px); }
-.btn-ghost { background: transparent; border: 1px solid var(--border-bright); color: var(--text-dim); font-size: 13px; font-family: var(--font-body); font-weight: 400; letter-spacing: 0; text-transform: none; }
-.btn-ghost:hover:not(:disabled) { border-color: rgba(255,255,255,0.3); color: var(--text); }
-.btn-danger { background: transparent; border: 1px solid rgba(232,64,64,0.3); color: var(--red); font-size: 12px; font-family: var(--font-body); font-weight: 400; letter-spacing: 0; text-transform: none; padding: 5px 10px; }
-.btn-danger:hover { background: rgba(232,64,64,0.08); }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-gold { background: linear-gradient(135deg, var(--gold) 0%, var(--gold-bright) 100%); color: #06090d; box-shadow: 0 2px 12px var(--gold-glow); }
+.btn-gold:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 20px var(--gold-glow); }
+.btn-gold:active:not(:disabled) { transform: translateY(0); }
+.btn-ghost { background: rgba(255,255,255,0.04); border: 1.5px solid var(--border-bright); color: var(--text); font-size: 13px; font-family: var(--font-body); font-weight: 500; letter-spacing: 0; text-transform: none; }
+.btn-ghost:hover:not(:disabled) { border-color: var(--border-strong); background: rgba(255,255,255,0.08); }
+.btn-danger { background: var(--red-dim); border: 1.5px solid rgba(255,84,112,0.4); color: var(--red); font-size: 12px; font-family: var(--font-body); font-weight: 500; letter-spacing: 0; text-transform: none; padding: 6px 11px; }
+.btn-danger:hover { background: rgba(255,84,112,0.2); border-color: var(--red); }
 .btn-sm { padding: 6px 12px; font-size: 14px; }
 
 /* STATUS BADGE */
@@ -317,44 +334,59 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
 .show-result-sub { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); margin-top: 6px; }
 
 /* TRADE ADVISOR */
+/* TRADE OFFERS GRID — SIDE BY SIDE */
+.trade-offers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
 .trade-offer-card {
-  background: #0d1620;
-  border: 1px solid rgba(64,144,240,0.25);
-  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(96,165,250,0.07) 0%, var(--surface) 100%);
+  border: 2px solid rgba(96,165,250,0.35);
+  border-radius: 12px;
   overflow: hidden;
-  transition: border-color 0.2s;
-  box-shadow: 0 0 0 1px rgba(64,144,240,0.08), inset 0 1px 0 rgba(255,255,255,0.04);
+  transition: all 0.2s;
+  box-shadow: 0 0 18px rgba(96,165,250,0.06), var(--shadow-md);
+}
+
+.trade-offer-card:hover {
+  border-color: rgba(96,165,250,0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(96,165,250,0.15), var(--shadow-lg);
 }
 
 .trade-offer-card.winner {
-  border-color: rgba(240,192,64,0.6);
-  box-shadow: 0 0 0 1px rgba(240,192,64,0.15), 0 0 20px rgba(240,192,64,0.06), inset 0 1px 0 rgba(255,255,255,0.04);
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(255,201,64,0.1) 0%, var(--surface) 100%);
+  box-shadow: 0 0 32px var(--gold-glow), var(--shadow-lg);
 }
 
 .trade-offer-header {
   padding: 14px 18px;
-  background: rgba(64,144,240,0.06);
-  border-bottom: 1px solid rgba(64,144,240,0.15);
+  background: rgba(96,165,250,0.1);
+  border-bottom: 2px solid rgba(96,165,250,0.2);
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .trade-offer-card.winner .trade-offer-header {
-  background: rgba(240,192,64,0.07);
-  border-bottom-color: rgba(240,192,64,0.2);
+  background: rgba(255,201,64,0.12);
+  border-bottom-color: rgba(255,201,64,0.3);
 }
 
 .trade-offer-title {
   font-family: var(--font-display);
   font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 1px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
   color: var(--text);
 }
 
-/* OFFER STEPPER NAV */
+/* OFFER STEPPER NAV (kept for legacy but now hidden in grid view) */
 .offer-nav {
   display: flex;
   align-items: center;
@@ -663,25 +695,26 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
 
 /* YOUR ITEMS BOX */
 .your-items-box {
-  background: #0d1a14;
-  border: 1px solid rgba(64,200,120,0.3);
-  border-radius: 10px;
-  padding: 18px 20px;
+  background: linear-gradient(135deg, rgba(74,222,128,0.08) 0%, var(--surface) 100%);
+  border: 2px solid rgba(74,222,128,0.4);
+  border-radius: 12px;
+  padding: 20px 22px;
   margin-bottom: 24px;
-  box-shadow: 0 0 0 1px rgba(64,200,120,0.06), inset 0 1px 0 rgba(255,255,255,0.03);
+  box-shadow: 0 0 24px rgba(74,222,128,0.08), var(--shadow-md);
 }
 
 .your-items-box-header {
   font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 2.5px;
   text-transform: uppercase;
   color: var(--green);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  text-shadow: 0 0 12px var(--green-glow);
 }
 
 /* TRADE RATE — COMPACT */
@@ -853,7 +886,86 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
 .delta-negative { color: var(--red); }
 .delta-zero { color: var(--text-dim); }
 
-/* API CARD SEARCH */
+/* COLLECTION GRID */
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.collection-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.collection-card:hover { border-color: rgba(240,192,64,0.4); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+.collection-card.have { border-left: 3px solid var(--green); }
+.collection-card.want { border-left: 3px solid var(--gold); }
+
+.collection-card-img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  background: var(--surface);
+}
+
+.collection-card-img-placeholder {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  color: var(--text-faint);
+}
+
+.collection-card-info { padding: 10px; }
+.collection-card-name { font-size: 12px; font-weight: 500; color: var(--text); line-height: 1.3; margin-bottom: 3px; }
+.collection-card-set { font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); margin-bottom: 4px; }
+.collection-card-bottom { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-top: 6px; }
+.collection-card-price { font-family: var(--font-mono); font-size: 11px; color: var(--gold); font-weight: 500; }
+
+.collection-card-status-badge {
+  position: absolute;
+  top: 6px; right: 6px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.collection-card-status-badge.have { background: rgba(64,200,120,0.92); color: #080c10; }
+.collection-card-status-badge.want { background: rgba(240,192,64,0.92); color: #080c10; }
+
+.collection-card-remove {
+  position: absolute;
+  top: 6px; left: 6px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(8,12,16,0.85);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.collection-card:hover .collection-card-remove { opacity: 1; }
+.collection-card-remove:hover { background: rgba(232,64,64,0.9); color: #fff; }
+
+.collection-card.have .collection-card-img { opacity: 1; }
+.collection-card.want { background: rgba(240,192,64,0.03); }
 .api-search-results {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -910,6 +1022,48 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
 }
 
 .api-card-result:hover .api-card-add-overlay { opacity: 1; }
+
+/* SEARCH/ADD PANEL — TOP OF COLLECTION */
+.search-add-panel {
+  background: linear-gradient(135deg, rgba(255,201,64,0.06) 0%, var(--surface) 100%);
+  border: 2px solid rgba(255,201,64,0.3);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 24px rgba(255,201,64,0.06), var(--shadow-md);
+}
+
+.search-add-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 14px;
+}
+
+.search-add-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-shadow: 0 0 10px var(--gold-glow);
+}
+
+/* CONDITION PILL */
+.condition-pill {
+  background: rgba(192,132,252,0.15);
+  border: 1px solid rgba(192,132,252,0.4);
+  border-radius: 4px;
+  color: var(--purple);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.15s;
+}
+.condition-pill:hover { background: rgba(192,132,252,0.25); border-color: var(--purple); }
+.condition-pill option { background: #1a2533; color: var(--text); }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
 `;
@@ -917,13 +1071,13 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-body);
 // ── MOCK DATA ──────────────────────────────────────────────────────────────────
 
 const MOCK_COLLECTION = [
-  { id: "c1", name: "Charizard VMAX 074/073", set: "Champion's Path", type: "Rainbow Rare", value: 174.18, status: "have", focus: "Charizard" },
-  { id: "c2", name: "Charizard ex 223/197", set: "Obsidian Flames", type: "Special Illustration Rare", value: 109.46, status: "have", focus: "Charizard" },
-  { id: "c3", name: "Charizard 6/108", set: "EX Power Keepers", type: "Reverse Holo", value: 144.84, status: "have", focus: "Charizard" },
-  { id: "c4", name: "Charizard-EX 100/106", set: "Flashfire", type: "Ultra Rare", value: 266.08, status: "have", focus: "Charizard" },
-  { id: "c5", name: "Charizard 146/144", set: "Skyridge", type: "Secret Rare", value: 2524.86, status: "have", focus: "Charizard" },
-  { id: "c6", name: "Pikachu 049/203", set: "Evolving Skies", type: "Reverse Holo", value: 0.60, status: "have", focus: "Pikachu" },
-  { id: "c7", name: "Pikachu ex 063/193", set: "Paldea Evolved", type: "Double Rare", value: 4.17, status: "have", focus: "Pikachu" },
+  { id: "c1", name: "Charizard VMAX 074/073", set: "Champion's Path", type: "Rainbow Rare", value: 174.18, condition: "NM", status: "have", focus: "Charizard" },
+  { id: "c2", name: "Charizard ex 223/197", set: "Obsidian Flames", type: "Special Illustration Rare", value: 109.46, condition: "NM", status: "have", focus: "Charizard" },
+  { id: "c3", name: "Charizard 6/108", set: "EX Power Keepers", type: "Reverse Holo", value: 144.84, condition: "LP", status: "have", focus: "Charizard" },
+  { id: "c4", name: "Charizard-EX 100/106", set: "Flashfire", type: "Ultra Rare", value: 266.08, condition: "NM", status: "have", focus: "Charizard" },
+  { id: "c5", name: "Charizard 146/144", set: "Skyridge", type: "Secret Rare", value: 2524.86, condition: "NM", status: "have", focus: "Charizard" },
+  { id: "c6", name: "Pikachu 049/203", set: "Evolving Skies", type: "Reverse Holo", value: 0.60, condition: "NM", status: "have", focus: "Pikachu" },
+  { id: "c7", name: "Pikachu ex 063/193", set: "Paldea Evolved", type: "Double Rare", value: 4.17, condition: "NM", status: "have", focus: "Pikachu" },
   { id: "c8", name: "Pikachu 065/202", set: "Sword & Shield Base", type: "Reverse Holo", value: 1.26, status: "have", focus: "Pikachu" },
   { id: "c9", name: "Mimikyu 97/149", set: "Sun & Moon Base", type: "Holo Rare", value: 18.50, status: "have", focus: "Mimikyu" },
   { id: "c10", name: "Mimikyu VMAX 115/264", set: "Fusion Strike", type: "Rare Holo V", value: 12.00, status: "have", focus: "Mimikyu" },
@@ -978,7 +1132,12 @@ function CollectionTracker({ onSendToTrade }) {
   const [apiError, setApiError] = useState("");
   const [addStatus, setAddStatus] = useState("have");
   const [addFocus, setAddFocus] = useState("Other");
+  const [addCondition, setAddCondition] = useState("NM");
   const searchTimeout = useRef(null);
+
+  const CONDITIONS = ["NM", "LP", "MP", "HP", "DMG"];
+  const CONDITION_MULT = { NM: 1.0, LP: 0.85, MP: 0.65, HP: 0.45, DMG: 0.25 };
+  const CONDITION_LABEL = { NM: "Near Mint", LP: "Lightly Played", MP: "Moderately Played", HP: "Heavily Played", DMG: "Damaged" };
 
   async function searchCards(q) {
     if (!q.trim()) { setApiResults([]); return; }
@@ -1003,15 +1162,17 @@ function CollectionTracker({ onSendToTrade }) {
 
   function addFromApi(card) {
     const tcgPrice = card.tcgplayer?.prices;
-    const priceVal = tcgPrice
+    const nmPrice = tcgPrice
       ? (tcgPrice.holofoil?.market || tcgPrice.normal?.market || tcgPrice.reverseHolofoil?.market || tcgPrice["1stEditionHolofoil"]?.market || 0)
       : 0;
+    const priceVal = nmPrice * (CONDITION_MULT[addCondition] || 1);
     const newCard = {
-      id: `api-${card.id}`,
+      id: `api-${card.id}-${addCondition}`,
       name: `${card.name} ${card.number}/${card.set?.printedTotal || card.set?.total || "?"}`,
       set: card.set?.name || "Unknown Set",
       type: card.rarity || "—",
       value: priceVal,
+      condition: addCondition,
       status: addStatus,
       focus: addFocus || card.name,
       image: card.images?.small,
@@ -1035,6 +1196,16 @@ function CollectionTracker({ onSendToTrade }) {
 
   function toggleStatus(id) {
     setAllCards(prev => prev.map(c => c.id === id ? { ...c, status: c.status === "have" ? "want" : "have" } : c));
+  }
+
+  function updateCondition(id, newCondition) {
+    setAllCards(prev => prev.map(c => {
+      if (c.id !== id) return c;
+      const oldMult = CONDITION_MULT[c.condition || "NM"] || 1;
+      const newMult = CONDITION_MULT[newCondition] || 1;
+      const nmPrice = c.value / oldMult;
+      return { ...c, condition: newCondition, value: nmPrice * newMult };
+    }));
   }
 
   function removeCard(id) {
@@ -1165,54 +1336,13 @@ function CollectionTracker({ onSendToTrade }) {
         </div>
       </div>
 
-      {/* FILTER + SEARCH */}
-      <div className="filter-bar">
-        <div className="search-input-wrap" style={{maxWidth:300}}>
-          <span className="search-icon">🔍</span>
-          <input className="input" placeholder="Search cards…" value={search} onChange={e => setSearch(e.target.value)} />
+      {/* SEARCH & ADD CARDS — UP TOP NOW */}
+      <div className="search-add-panel">
+        <div className="search-add-header">
+          <span style={{fontSize:18}}>🔍</span>
+          <div className="search-add-title">Search & Add Cards</div>
         </div>
-        {["all","have","want"].map(s => (
-          <button key={s} className={`filter-chip ${filterStatus === s ? "active" : ""}`} onClick={() => setFilterStatus(s)}>
-            {s === "all" ? "All" : s === "have" ? "✅ Have" : "⭐ Want"}
-          </button>
-        ))}
-      </div>
-
-      {/* CARD LIST */}
-      {filtered.length === 0 ? (
-        <div className="empty">
-          <div className="empty-icon">🃏</div>
-          <div className="empty-title">No Cards Found</div>
-          <div className="empty-sub">Try adjusting your filters or add cards below</div>
-        </div>
-      ) : (
-        <div className="card-list">
-          {filtered.map(c => (
-            <div key={c.id} className={`card-item ${c.status}`} onClick={() => toggleStatus(c.id)}>
-              <div style={{width:6, height:6, borderRadius:"50%", background: c.status === "have" ? "var(--green)" : "var(--gold)", flexShrink:0}} />
-              <div style={{flex:1, minWidth:0}}>
-                <div className={`card-item-name ${c.status === "have" ? "strikethrough" : ""}`}>{c.name}</div>
-                <div style={{display:"flex", gap:6, marginTop:3, flexWrap:"wrap"}}>
-                  <span className="badge badge-set">{c.set}</span>
-                  <span className="badge badge-set">{c.type}</span>
-                </div>
-              </div>
-              <div className="card-item-price">${c.value.toFixed(2)}</div>
-              <span className={`badge ${c.status === "have" ? "badge-have" : "badge-want"}`}>
-                {c.status === "have" ? "✓ Have" : "★ Want"}
-              </span>
-              <button className="btn btn-danger" style={{flexShrink:0}} onClick={e => { e.stopPropagation(); removeCard(c.id); }}>✕</button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* ADD CARD — API SEARCH */}
-      <div className="divider" />
-      <div className="label">Search & Add Cards</div>
-      <div className="card">
-        {/* search controls row */}
-        <div style={{display:"grid", gridTemplateColumns:"1fr auto auto", gap:8, alignItems:"center"}}>
+        <div style={{display:"grid", gridTemplateColumns:"1fr auto auto auto", gap:8, alignItems:"center"}}>
           <div style={{position:"relative"}}>
             <span style={{position:"absolute", left:12, top:"50%", transform:"translateY(-50%)", color:"var(--text-faint)", fontSize:13, pointerEvents:"none"}}>🔍</span>
             <input
@@ -1223,13 +1353,20 @@ function CollectionTracker({ onSendToTrade }) {
               onChange={handleApiSearchChange}
             />
           </div>
-          <select className="input" value={addFocus} onChange={e => setAddFocus(e.target.value)} style={{width:"auto"}}>
+          <select className="input" value={addFocus} onChange={e => setAddFocus(e.target.value)} style={{width:"auto"}} title="Focus group">
             {["Charizard","Pikachu","Mimikyu","Other"].map(f => <option key={f}>{f}</option>)}
+          </select>
+          <select className="input" value={addCondition} onChange={e => setAddCondition(e.target.value)} style={{width:"auto"}} title="Condition">
+            {CONDITIONS.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
           <select className="input" value={addStatus} onChange={e => setAddStatus(e.target.value)} style={{width:"auto"}}>
             <option value="have">Have</option>
             <option value="want">Want</option>
           </select>
+        </div>
+
+        <div style={{marginTop:8, fontSize:11, color:"var(--text-faint)", fontFamily:"var(--font-mono)"}}>
+          Adding as: <span style={{color: addStatus === "have" ? "var(--green)" : "var(--gold)"}}>{addStatus === "have" ? "✅ Have" : "⭐ Want"}</span> · {CONDITION_LABEL[addCondition]} ({Math.round(CONDITION_MULT[addCondition]*100)}% of NM price)
         </div>
 
         {apiLoading && (
@@ -1245,15 +1382,16 @@ function CollectionTracker({ onSendToTrade }) {
         {apiResults.length > 0 && (
           <>
             <div className="label" style={{marginTop:14, marginBottom:0}}>
-              {apiResults.length} results — click a card to add as {addStatus === "have" ? "✅ Have" : "⭐ Want"}
+              {apiResults.length} results — click a card to add
             </div>
             <div className="api-search-results">
               {apiResults.map(card => {
-                const alreadyHave = allCards.some(c => c.id === `api-${card.id}`);
+                const alreadyHave = allCards.some(c => c.id === `api-${card.id}-${addCondition}`);
                 const tcgPrice = card.tcgplayer?.prices;
-                const price = tcgPrice
+                const nmPrice = tcgPrice
                   ? (tcgPrice.holofoil?.market || tcgPrice.normal?.market || tcgPrice.reverseHolofoil?.market || tcgPrice["1stEditionHolofoil"]?.market || null)
                   : null;
+                const adjPrice = nmPrice ? nmPrice * CONDITION_MULT[addCondition] : null;
                 return (
                   <div
                     key={card.id}
@@ -1270,7 +1408,10 @@ function CollectionTracker({ onSendToTrade }) {
                     <div className="api-card-info">
                       <div className="api-card-name">{card.name} {card.number}/{card.set?.printedTotal || card.set?.total}</div>
                       <div className="api-card-set">{card.set?.name}</div>
-                      {price ? <div className="api-card-price">${price.toFixed(2)}</div> : <div className="api-card-price" style={{color:"var(--text-faint)"}}>No price</div>}
+                      {adjPrice !== null
+                        ? <div className="api-card-price">${adjPrice.toFixed(2)} <span style={{color:"var(--text-faint)", fontSize:9}}>({addCondition})</span></div>
+                        : <div className="api-card-price" style={{color:"var(--text-faint)"}}>No price</div>
+                      }
                     </div>
                   </div>
                 );
@@ -1283,6 +1424,63 @@ function CollectionTracker({ onSendToTrade }) {
           <div style={{textAlign:"center", padding:"20px 0", color:"var(--text-faint)", fontSize:13}}>No cards found for "{apiSearch}"</div>
         )}
       </div>
+
+      <div className="divider" />
+
+      {/* COLLECTION FILTER + LIST */}
+      <div className="filter-bar">
+        <div className="search-input-wrap" style={{maxWidth:300}}>
+          <span className="search-icon">🔍</span>
+          <input className="input" placeholder="Filter your collection…" value={search} onChange={e => setSearch(e.target.value)} />
+        </div>
+        {["all","have","want"].map(s => (
+          <button key={s} className={`filter-chip ${filterStatus === s ? "active" : ""}`} onClick={() => setFilterStatus(s)}>
+            {s === "all" ? "All" : s === "have" ? "✅ Have" : "⭐ Want"}
+          </button>
+        ))}
+      </div>
+
+      {/* CARD GRID WITH IMAGES */}
+      {filtered.length === 0 ? (
+        <div className="empty">
+          <div className="empty-icon">🃏</div>
+          <div className="empty-title">No Cards Yet</div>
+          <div className="empty-sub">Use the search above to add cards to your collection</div>
+        </div>
+      ) : (
+        <div className="collection-grid">
+          {filtered.map(c => (
+            <div key={c.id} className={`collection-card ${c.status}`} onClick={() => toggleStatus(c.id)}>
+              {c.image
+                ? <img src={c.image} alt={c.name} className="collection-card-img" loading="lazy" />
+                : <div className="collection-card-img-placeholder">🃏</div>
+              }
+              <div className={`collection-card-status-badge ${c.status}`}>
+                {c.status === "have" ? "✓ HAVE" : "★ WANT"}
+              </div>
+              <button className="collection-card-remove" onClick={e => { e.stopPropagation(); removeCard(c.id); }}>✕</button>
+              <div className="collection-card-info">
+                <div className="collection-card-name">{c.name}</div>
+                <div className="collection-card-set">{c.set}</div>
+                <div className="collection-card-bottom">
+                  {c.condition && (
+                    <select
+                      value={c.condition}
+                      onClick={e => e.stopPropagation()}
+                      onChange={e => updateCondition(c.id, e.target.value)}
+                      className="condition-pill"
+                      title={CONDITION_LABEL[c.condition]}
+                    >
+                      {CONDITIONS.map(cd => <option key={cd} value={cd}>{cd}</option>)}
+                    </select>
+                  )}
+                  <div className="collection-card-price">${c.value.toFixed(2)}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -1458,7 +1656,26 @@ Format your response as JSON:
       });
       const data = await res.json();
       const text = data.content.map(b => b.text || "").join("");
-      const clean = text.replace(/```json|```/g, "").trim();
+      // Extract JSON block — Haiku sometimes adds commentary after the JSON
+      let clean = text.trim();
+      // Try to find content inside ```json fences first
+      const fenceMatch = clean.match(/```(?:json)?\s*([\s\S]*?)```/);
+      if (fenceMatch) {
+        clean = fenceMatch[1].trim();
+      } else {
+        // Otherwise find the first { and the matching closing }
+        const start = clean.indexOf("{");
+        if (start !== -1) {
+          let depth = 0;
+          for (let i = start; i < clean.length; i++) {
+            if (clean[i] === "{") depth++;
+            else if (clean[i] === "}") {
+              depth--;
+              if (depth === 0) { clean = clean.slice(start, i + 1); break; }
+            }
+          }
+        }
+      }
       const parsed = JSON.parse(clean);
       setAnalysis(parsed);
     } catch (err) {
@@ -1607,89 +1824,74 @@ Format your response as JSON:
         </div>
       </div>
 
-      {offers.length > 0 && (() => {
-        const safeIdx = Math.min(activeOfferIdx, offers.length - 1);
-        const offer = offers[safeIdx];
-        const oa = offerAnalysis(offer.id);
-        const r = rank(offer.id);
-        const inp = offerInputs[offer.id] || {};
-        const total = offer.items.reduce((s,i) => s + i.value, 0);
-        const adjTotal = offerAdjusted(offer);
-        const delta = myAdjusted - adjTotal;
-        const deltaLabel = Math.abs(delta) < 1 ? "even" : delta > 0 ? `you owe $${delta.toFixed(2)}` : `+$${Math.abs(delta).toFixed(2)} back`;
-        const deltaColor = Math.abs(delta) < 1 ? "var(--text-dim)" : delta > 0 ? "var(--red)" : "var(--green)";
-        return (
-          <div>
-            {/* STEPPER NAV */}
-            <div className="offer-nav">
-              <button className="offer-nav-btn" onClick={() => setActiveOfferIdx(i => Math.max(0, i-1))} disabled={safeIdx === 0}>‹</button>
-              <div className="offer-nav-dots">
-                {offers.map((o, i) => {
-                  const or = rank(o.id);
-                  return <button key={o.id} className={`offer-nav-dot ${i === safeIdx ? "active" : ""}`} onClick={() => setActiveOfferIdx(i)} title={o.label} />;
-                })}
-              </div>
-              <button className="offer-nav-btn" onClick={() => setActiveOfferIdx(i => Math.min(offers.length-1, i+1))} disabled={safeIdx === offers.length-1}>›</button>
-              <span style={{fontFamily:"var(--font-mono)", fontSize:11, color:"var(--text-faint)"}}>
-                {safeIdx+1} / {offers.length}
-              </span>
-            </div>
-
-            <div className={`trade-offer-card ${r === 1 ? "winner" : ""}`}>
-              <div className="trade-offer-header">
-                <div>
-                  <div className="trade-offer-title">{offer.label}</div>
-                  <div style={{display:"flex", gap:8, alignItems:"center", marginTop:2, flexWrap:"wrap"}}>
-                    <span className="text-dim" style={{fontSize:12, fontFamily:"var(--font-mono)"}}>${total.toFixed(2)} face</span>
-                    {theirRate < 100 && <span style={{fontSize:12, fontFamily:"var(--font-mono)", color:"var(--gold)"}}>→ ${adjTotal.toFixed(2)} adj.</span>}
-                    {myItems.length > 0 && <span style={{fontSize:11, fontFamily:"var(--font-mono)", color:deltaColor}}>({deltaLabel})</span>}
-                  </div>
-                </div>
-                <div className="row" style={{gap:8}}>
-                  {oa && <div className={`score-ring ${scoreClass(oa.score)}`}>{oa.score}</div>}
-                  {r && <span className="badge badge-want">#{r}</span>}
-                  <button className="btn btn-danger btn-sm" onClick={() => removeOffer(offer.id)}>✕</button>
-                </div>
-              </div>
-
-              <div className="trade-offer-body">
-                {offer.items.length === 0 && (
-                  <div className="text-dim text-sm" style={{padding:"8px 0"}}>No items yet — add below</div>
-                )}
-                {offer.items.map(item => (
-                  <div key={item.id} className="item-line">
-                    <span className="item-line-name">{item.name}</span>
-                    <span className="item-line-type">{item.type}</span>
-                    <span className="item-line-val">${item.value}</span>
-                    <span style={{cursor:"pointer", color:"var(--text-faint)", fontSize:14}} onClick={() => removeOfferItem(offer.id, item.id)}>✕</span>
-                  </div>
-                ))}
-                {oa && (
-                  <div style={{marginTop:12, padding:"10px 12px", background:"var(--surface2)", borderRadius:6, border:"1px solid var(--border)"}}>
-                    <div style={{fontSize:13, lineHeight:1.65, color:"var(--text-dim)"}}>{oa.analysis}</div>
-                    <div className="row mt-8" style={{gap:8, flexWrap:"wrap"}}>
-                      <div style={{flex:1, minWidth:120}}>
-                        <div className="label" style={{marginBottom:3, fontSize:9}}>Key Upside</div>
-                        <div className="text-green text-xs">{oa.keyUpside}</div>
-                      </div>
-                      <div style={{flex:1, minWidth:120}}>
-                        <div className="label" style={{marginBottom:3, fontSize:9}}>Key Risk</div>
-                        <div className="text-red text-xs">{oa.keyRisk}</div>
-                      </div>
+      {offers.length > 0 && (
+        <div className="trade-offers-grid">
+          {offers.map(offer => {
+            const oa = offerAnalysis(offer.id);
+            const r = rank(offer.id);
+            const inp = offerInputs[offer.id] || {};
+            const total = offer.items.reduce((s,i) => s + i.value, 0);
+            const adjTotal = offerAdjusted(offer);
+            const delta = myAdjusted - adjTotal;
+            const deltaLabel = Math.abs(delta) < 1 ? "even" : delta > 0 ? `you owe $${delta.toFixed(2)}` : `+$${Math.abs(delta).toFixed(2)} back`;
+            const deltaColor = Math.abs(delta) < 1 ? "var(--text-dim)" : delta > 0 ? "var(--red)" : "var(--green)";
+            return (
+              <div key={offer.id} className={`trade-offer-card ${r === 1 ? "winner" : ""}`}>
+                <div className="trade-offer-header">
+                  <div>
+                    <div className="trade-offer-title">{offer.label}</div>
+                    <div style={{display:"flex", gap:8, alignItems:"center", marginTop:2, flexWrap:"wrap"}}>
+                      <span className="text-dim" style={{fontSize:12, fontFamily:"var(--font-mono)"}}>${total.toFixed(2)} face</span>
+                      {theirRate < 100 && <span style={{fontSize:12, fontFamily:"var(--font-mono)", color:"var(--gold)"}}>→ ${adjTotal.toFixed(2)} adj.</span>}
+                      {myItems.length > 0 && <span style={{fontSize:11, fontFamily:"var(--font-mono)", color:deltaColor}}>({deltaLabel})</span>}
                     </div>
                   </div>
-                )}
-              </div>
+                  <div className="row" style={{gap:8}}>
+                    {oa && <div className={`score-ring ${scoreClass(oa.score)}`}>{oa.score}</div>}
+                    {r && <span className="badge badge-want">#{r}</span>}
+                    <button className="btn btn-danger btn-sm" onClick={() => removeOffer(offer.id)}>✕</button>
+                  </div>
+                </div>
 
-              <div className="add-item-area">
-                <input className="input flex-1" placeholder="Add item to this offer…" value={inp.name || ""} onChange={e => updateOfferInput(offer.id, "name", e.target.value)} onKeyDown={e => e.key === "Enter" && addOfferItem(offer.id)} style={{fontSize:12}} />
-                <input className="input" placeholder="$" value={inp.value || ""} onChange={e => updateOfferInput(offer.id, "value", e.target.value)} style={{width:70, fontSize:12}} type="number" />
-                <button className="btn btn-ghost btn-sm" onClick={() => addOfferItem(offer.id)}>+</button>
+                <div className="trade-offer-body">
+                  {offer.items.length === 0 && (
+                    <div className="text-dim text-sm" style={{padding:"8px 0"}}>No items yet — add below</div>
+                  )}
+                  {offer.items.map(item => (
+                    <div key={item.id} className="item-line">
+                      <span className="item-line-name">{item.name}</span>
+                      <span className="item-line-type">{item.type}</span>
+                      <span className="item-line-val">${item.value}</span>
+                      <span style={{cursor:"pointer", color:"var(--text-faint)", fontSize:14}} onClick={() => removeOfferItem(offer.id, item.id)}>✕</span>
+                    </div>
+                  ))}
+                  {oa && (
+                    <div style={{marginTop:12, padding:"10px 12px", background:"var(--surface2)", borderRadius:6, border:"1px solid var(--border)"}}>
+                      <div style={{fontSize:13, lineHeight:1.65, color:"var(--text-dim)"}}>{oa.analysis}</div>
+                      <div className="row mt-8" style={{gap:8, flexWrap:"wrap"}}>
+                        <div style={{flex:1, minWidth:120}}>
+                          <div className="label" style={{marginBottom:3, fontSize:9}}>Key Upside</div>
+                          <div className="text-green text-xs">{oa.keyUpside}</div>
+                        </div>
+                        <div style={{flex:1, minWidth:120}}>
+                          <div className="label" style={{marginBottom:3, fontSize:9}}>Key Risk</div>
+                          <div className="text-red text-xs">{oa.keyRisk}</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="add-item-area">
+                  <input className="input flex-1" placeholder="Add item to this offer…" value={inp.name || ""} onChange={e => updateOfferInput(offer.id, "name", e.target.value)} onKeyDown={e => e.key === "Enter" && addOfferItem(offer.id)} style={{fontSize:12}} />
+                  <input className="input" placeholder="$" value={inp.value || ""} onChange={e => updateOfferInput(offer.id, "value", e.target.value)} style={{width:70, fontSize:12}} type="number" />
+                  <button className="btn btn-ghost btn-sm" onClick={() => addOfferItem(offer.id)}>+</button>
+                </div>
               </div>
-            </div>
-          </div>
-        );
-      })()}
+            );
+          })}
+        </div>
+      )}
 
       {/* OVERALL VERDICT */}
       {analysis && !analysis.error && analysis.recommendation && (
